@@ -1,5 +1,6 @@
 const { createSocketServer } = require("./server/socketServer");
 const redis = require("redis");
+const mongoose = require("mongoose");
 
 const main = async () => {
   const redisClient = redis.createClient();
@@ -10,6 +11,9 @@ const main = async () => {
     redisClient.connect(),
     pubClient.connect(),
     subClient.connect(),
+    mongoose
+      .connect("mongodb://localhost:27017/Chat")
+      .then(() => console.log("connected to mongodb")),
   ]);
   // We create two redis clients with duplicate
   //duplicate allows us have the exact same settings for each redis client

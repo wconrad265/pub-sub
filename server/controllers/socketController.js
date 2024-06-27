@@ -1,7 +1,11 @@
+const { addChannel } = require("../utils/addChannel");
+const { addMessage } = require("../utils/addMessage");
+
 const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
     try {
-      await socket.join(channel);
+      await Promise.all([socket.join(channel), addChannel(channel)]);
+
       if (typeof callback === "function") {
         callback({
           success: true,
@@ -27,10 +31,11 @@ const handleConnection = (socket, ioServer) => {
     }
   });
 
-  socket.on("send message", (channel, message) => {
+  socket.on("send message", async (channel, message) => {
     try {
       console.log(`Sending message to channel ${channel}:`, message);
       ioServer.to(channel).emit("new message", { channel, message });
+      await addMessage(channel, message);
     } catch (error) {
       console.error(`Failed to send message to ${channel}:`, error);
     }
