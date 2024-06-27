@@ -1,10 +1,12 @@
 const Channel = require("../model/channel");
 
 const addChannel = async (channelName) => {
-  const channel = new Channel({ channelName });
+  const existingChannel = await Channel.findOne({ channelName });
 
-  await channel.save();
-  console.log("added to mongo");
+  if (!existingChannel) {
+    const channel = new Channel({ channelName });
+    await channel.save();
+  }
 };
 
 module.exports = {
