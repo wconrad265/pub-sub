@@ -1,5 +1,5 @@
 const { addChannel } = require("../utils/addChannel");
-const { addMessage } = require("../utils/addMessage");
+const { messageQueue } = require("../queue/queue.js");
 
 const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
@@ -35,7 +35,8 @@ const handleConnection = (socket, ioServer) => {
     try {
       console.log(`Sending message to channel ${channel}:`, message);
       ioServer.to(channel).emit("new message", { channel, message });
-      await addMessage(channel, message);
+
+      messageQueue.add("messages", { channel, message });
     } catch (error) {
       console.error(`Failed to send message to ${channel}:`, error);
     }
