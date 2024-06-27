@@ -7,7 +7,6 @@ const createSocketServer = (pubClient, subClient) => {
   const httpServer = createServer();
 
   const ioServer = new Server(httpServer, {
-    transports: ["websocket", "polling"],
     cors: {
       origin: "*",
     },
