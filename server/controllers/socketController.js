@@ -4,12 +4,15 @@ const { messageQueue } = require("../queue/queue.js");
 const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
     try {
-      await Promise.all([socket.join(channel), addChannel(channel)]);
-
+      const result = await Promise.all([
+        socket.join(channel),
+        addChannel(channel),
+      ]);
       if (typeof callback === "function") {
         callback({
           success: true,
           message: `Successfully subscribed to ${channel}`,
+          pastMessages: result[1].messages.map((message) => message.content),
         });
       }
     } catch (error) {
