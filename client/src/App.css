@@ -1,0 +1,95 @@
+/* App.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+form {
+  margin-bottom: 10px;
+}
+
+form input[type="text"],
+form button {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form input[type="text"] {
+  width: calc(100% - 80px);
+  margin-right: 10px;
+}
+
+form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  max-height: 80vh;
+  overflow-y: auto;
+  height: 400px;
+}
+
+ul li {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+p {
+  margin-top: 0;
+}
+
+p.welcome {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.channel-info {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.join-channel {
+  display: flex;
+}
+
+.channel-info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.send {
+  display: flex;
+}
+
+.userName {
+  display: flex;
+}
