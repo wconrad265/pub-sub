@@ -1,21 +1,17 @@
+require("dotenv").config();
 const { createSocketServer } = require("./server/socketServer");
 const Redis = require("ioredis");
 const mongoose = require("mongoose");
+const PORT = process.env.PORT;
 
-const main = async () => {
-  const redisClient = new Redis();
+const redisClient = new Redis(process.env.REDIS_URI);
 
-  await Promise.all([
-    mongoose
-      .connect("mongodb://localhost:27017/Chat")
-      .then(() => console.log("connected to mongodb")),
-  ]);
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("connected to mongodb"));
 
-  const ioServer = await createSocketServer(redisClient);
+const ioServer = createSocketServer(redisClient);
 
-  ioServer.listen(8000, () => {
-    console.log("Server is running on port 8000");
-  });
-};
-
-main();
+ioServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
