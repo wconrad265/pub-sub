@@ -1,4 +1,4 @@
-const { addChannel } = require("../utils/addChannel");
+const { addChannel } = require("../utils/addChannel.js");
 const { messageQueue } = require("../queue/queue.js");
 
 const handleConnection = (socket, ioServer) => {

@@ -1,4 +1,5 @@
 const Channel = require("../model/channel");
+const fetchMessages = require("./getChannelMessages");
 
 const addChannel = async (channelName) => {
   const existingChannel = await Channel.findOne({ channelName }).populate(
