@@ -1,6 +1,7 @@
 const Webhook = require("../model/webhook");
 const { Queue, Worker } = require("bullmq");
 const { webhookSendQueue } = require("./webhookSendQueue");
+const { ObjectId } = require("mongoose").Types;
 
 const webhookChannelQueue = new Queue("webhookChannel", {
   connection: {
@@ -12,8 +13,9 @@ const webhookChannelQueue = new Queue("webhookChannel", {
 const worker = new Worker(
   "webhookChannel",
   async (job) => {
-    const { channel, message } = job.data;
-    const webhooks = await Webhook.find({ channel });
+    const { channel, message, channelId } = job.data;
+    const mongoChannelId = new ObjectId(channelId);
+    const webhooks = await Webhook.find({ channelId: mongoChannelId });
 
     if (webhooks) {
       for (const webhook of webhooks) {

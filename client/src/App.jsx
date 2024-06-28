@@ -33,8 +33,8 @@ const App = () => {
     setUser(username);
   };
 
-  const handleJoinChannel = (channelName, pastMessages) => {
-    setCurrentChannel(channelName);
+  const handleJoinChannel = (channelName, pastMessages, channelId) => {
+    setCurrentChannel({ name: channelName, id: channelId });
     setMessages((prevMessages) =>
       pastMessages.concat([`You joined ${channelName}`], prevMessages)
     );

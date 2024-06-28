@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const webhookSchema = new mongoose.Schema({
-  channel: {
-    type: String,
+  channelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Channel", 
     required: true,
   },
   url: {

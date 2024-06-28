@@ -1,6 +1,6 @@
 const Channel = require("../model/channel");
 const fetchMessages = require("./getChannelMessages");
-const addChannel = async (channelName) => {
+const findChannel = async (channelName) => {
   const existingChannel = await Channel.findOne({ channelName }).populate(
     "messages"
   );
@@ -8,11 +8,12 @@ const addChannel = async (channelName) => {
   if (!existingChannel) {
     const channel = new Channel({ channelName });
     await channel.save();
+    return channel;
+  } else {
+    return existingChannel;
   }
-
-  return existingChannel;
 };
 
 module.exports = {
-  addChannel,
+  findChannel,
 };

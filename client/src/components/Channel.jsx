@@ -11,7 +11,11 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
 
     socket.emit("subscribe", channelNameLower, (response) => {
       if (response.success) {
-        toggleJoinChannel(channelNameLower, response.pastMessages);
+        toggleJoinChannel(
+          channelNameLower,
+          response.pastMessages,
+          response.channelId
+        );
         setChannelNameField("");
       } else {
         console.error(response.message);
@@ -29,7 +33,7 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
     <>
       {currentChannel && (
         <div className="channel-info-container">
-          <p className="channel-info">Current Channel: {currentChannel}</p>
+          <p className="channel-info">Current Channel: {currentChannel.name}</p>
           <form onSubmit={handleLeaveChannel}>
             <button type="submit">Leave</button>
           </form>

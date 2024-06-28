@@ -1,10 +1,10 @@
 require("dotenv").config();
 const { connectMongoDB } = require("./config/db");
-const { ioServer } = require("./config/socket");
+const { createIoEmitter } = require("./config/socket");
 const app = require("./app");
 const PORT = process.env.PORT || 3000;
-const io = ioServer();
 
+createIoEmitter();
 connectMongoDB();
 
 app.listen(PORT, () => {

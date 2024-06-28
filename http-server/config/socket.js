@@ -1,34 +1,21 @@
-const { Server } = require("socket.io");
-const { createAdapter } = require("@socket.io/redis-streams-adapter");
+const { Emitter } = require("@socket.io/redis-emitter");
 const { redisClient } = require("./redis");
-const { createServer } = require("http");
 
-let ioInstance;
+let emitterInstance;
 
-const ioServer = () => {
-  const httpServer = createServer();
+const createIoEmitter = () => {
+  const emitter = new Emitter(redisClient);
 
-  const io = new Server(httpServer, {
-    cors: {
-      origin: "*",
-    },
-    connectionStateRecovery: {
-      maxDisconnectionDuration: 2 * 60 * 1000,
-    },
-  });
+  emitterInstance = emitter;
 
-  io.adapter(createAdapter(redisClient));
-
-  ioInstance = io;
-
-  return io;
+  return emitter;
 };
 
-const getIoInstance = () => {
-  if (!ioInstance) {
+const getEmitterInstance = () => {
+  if (!emitterInstance) {
     throw new Error("Socket.io instance has not been initialized.");
   }
-  return ioInstance;
+  return emitterInstance;
 };
 
-module.exports = { ioServer, getIoInstance };
+module.exports = { createIoEmitter, getEmitterInstance };

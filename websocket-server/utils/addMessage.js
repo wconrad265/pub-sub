@@ -1,18 +1,17 @@
 const Message = require("../model/message");
 const Channel = require("../model/channel");
 
-const addMessage = async (channelName, content) => {
-  let foundChannel = await Channel.findOne({ channelName: channelName });
-
+const addMessage = async (channelName, content, channelId) => {
   const message = new Message({
     content,
-    channel: foundChannel._id,
+    channel: channelId,
   });
 
   const savedMessage = await message.save();
-  foundChannel.messages = foundChannel.messages.concat(savedMessage._id);
-
-  await foundChannel.save();
+  
+  await Channel.findByIdAndUpdate(channelId, {
+    $push: { messages: savedMessage._id },
+  });
 };
 
 module.exports = {

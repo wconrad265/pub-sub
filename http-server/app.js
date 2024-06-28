@@ -7,5 +7,5 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use("/api", messages);
-app.use("/api", webhookRoute);
+app.use("/api/webhook", webhookRoute);
 module.exports = app;
