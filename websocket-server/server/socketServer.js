@@ -25,7 +25,7 @@ const createSocketServer = () => {
     socket.on("user", (user) => addUser(user, socket.id));
 
     socket.on("disconnect", () => {
-      removeUser(socket.id);
+      removeUser(socket.id, ioServer);
       console.log("Client disconnected");
     });
   });

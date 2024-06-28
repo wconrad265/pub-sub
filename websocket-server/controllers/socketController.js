@@ -7,9 +7,12 @@ const {
 } = require("../redis/channelCommands.js");
 
 const handleConnection = (socket, ioServer) => {
-  socket.on("subscribe", async (channel, callback) => {
+  socket.on("subscribe", async (channel, user, callback) => {
     try {
       await socket.join(channel);
+
+      ioServer.to(channel).emit("user join", { user, socketId: socket.id });
+
       const result = await Promise.all([
         findChannel(channel),
         getUsersInChannel(channel, socket.id),
@@ -29,6 +32,7 @@ const handleConnection = (socket, ioServer) => {
           message: `Successfully subscribed to ${channel}`,
           pastMessages,
           channelId,
+          channelPresence: usersInChannel,
         });
       }
     } catch (error) {
@@ -44,12 +48,12 @@ const handleConnection = (socket, ioServer) => {
 
   socket.on("unsubscribe", async (channel) => {
     try {
+      ioServer.to(channel).emit("user leave", { socketId: socket.id });
+
       await Promise.all([
         socket.leave(channel),
         removeUserFromChannel(channel, socket.id),
       ]);
-
-      // ioServer.to(channel).emit("user-left", { socketId: socket.id });
     } catch (error) {
       console.error(`Failed to unsubscribe from ${channel}:`, error);
     }

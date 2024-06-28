@@ -2,19 +2,25 @@
 import { useState } from "react";
 import { socket } from "../socket";
 
-const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
+const Channel = ({
+  toggleJoinChannel,
+  toggleLeaveChannel,
+  currentChannel,
+  user,
+}) => {
   const [channelNameField, setChannelNameField] = useState("");
 
   const handleJoinChannel = (event) => {
     event.preventDefault();
     const channelNameLower = channelNameField.toLowerCase();
 
-    socket.emit("subscribe", channelNameLower, (response) => {
+    socket.emit("subscribe", channelNameLower, user, (response) => {
       if (response.success) {
         toggleJoinChannel(
           channelNameLower,
           response.pastMessages,
-          response.channelId
+          response.channelId,
+          response.channelPresence
         );
         setChannelNameField("");
       } else {
@@ -25,7 +31,7 @@ const Channel = ({ toggleJoinChannel, toggleLeaveChannel, currentChannel }) => {
 
   const handleLeaveChannel = (event) => {
     event.preventDefault();
-    socket.emit("unsubscribe", currentChannel);
+    socket.emit("unsubscribe", currentChannel.name);
     toggleLeaveChannel();
   };
 

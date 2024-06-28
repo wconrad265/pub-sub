@@ -13,7 +13,7 @@ const addUser = async (user, socketId) => {
   }
 };
 
-const removeUser = async (socketId) => {
+const removeUser = async (socketId, ioServer) => {
   /*
     loop through user:${socketId}:channels, and remove him from every channel,
     remove from connectedUsers
@@ -24,9 +24,10 @@ const removeUser = async (socketId) => {
     `user:${socketId}:channels`
   );
 
-  const removeChannelsPromises = channelsSubscribed.map(
-    async (channel) => await redisClient.srem(`channel:${channel}`, socketId)
-  );
+  const removeChannelsPromises = channelsSubscribed.map(async (channel) => {
+    await redisClient.srem(`channel:${channel}`, socketId);
+    ioServer.to(channel).emit("user leave", { socketId });
+  });
 
   const operations = [
     ...removeChannelsPromises,
