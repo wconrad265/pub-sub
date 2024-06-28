@@ -1,5 +1,6 @@
 const express = require("express");
-
+const { messageQueue } = require("../queue/messaageQueue");
+const { getIoInstance } = require("../config/socket");
 const messages = express.Router();
 
 messages.post("/publish", async (req, res) => {
@@ -10,9 +11,11 @@ messages.post("/publish", async (req, res) => {
   }
 
   try {
+    const io = getIoInstance();
+
     messageQueue.add("messages", { channel, message });
 
-    ioServer.to(channel).emit("new message", { channel, message });
+    io.to(channel).emit("new message", { channel, message });
 
     return res.status(200).json({ success: true });
   } catch (error) {
