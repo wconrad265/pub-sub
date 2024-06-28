@@ -13,6 +13,12 @@ const ioServer = (httpServer) => {
   });
 
   io.adapter(createAdapter(redisClient));
+
+  io.on("connection", (socket) => {
+    socket.on("*", (data) => {
+      console.lot(`Received message from channel: ${data.channel}`);
+    });
+  });
   return io;
 };
 
