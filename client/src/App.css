@@ -11,8 +11,8 @@ body {
 }
 
 .container {
-  width: 100%;
-  max-width: 800px;
+  /* width: 600px; */
+  max-width: 100%;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -21,6 +21,24 @@ body {
 
 form {
   margin-bottom: 10px;
+}
+
+.message-container {
+  display: flex;
+  width: 100%;
+}
+
+.container-user {
+  width: 600px;
+  max-width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.message-container > * {
+  flex: 1; /* Each child element takes up equal space */
 }
 
 form input[type="text"],

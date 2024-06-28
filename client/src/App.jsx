@@ -82,26 +82,38 @@ const App = () => {
   };
 
   return (
-    <div className="container">
+    <div className={`${currentChannel ? "container-user" : "container"}`}>
       {!user ? (
         <Username toggleUsernameSubmit={handleUsernameSubmit} />
       ) : (
         <>
           <p className="welcome">Welcome, {user}!</p>
-          {channelPresence &&
-            channelPresence.map((member) => <p>{member.user}</p>)}
-          <Channel
-            toggleJoinChannel={handleJoinChannel}
-            toggleLeaveChannel={handleLeaveChannel}
-            currentChannel={currentChannel}
-            user={user}
-          />
-          {currentChannel && (
-            <>
-              <DisplayMessages messages={messages} />
-              <SendMessageForm user={user} currentChannel={currentChannel} />
-            </>
-          )}
+          <div className={`${currentChannel ? "message-container" : ""}`}>
+            <div className="online-users">
+              {" "}
+              {channelPresence &&
+                channelPresence.map((member, ind) => (
+                  <p key={ind}>{member.user}</p>
+                ))}
+            </div>
+            <div>
+              <Channel
+                toggleJoinChannel={handleJoinChannel}
+                toggleLeaveChannel={handleLeaveChannel}
+                currentChannel={currentChannel}
+                user={user}
+              />
+              {currentChannel && (
+                <>
+                  <DisplayMessages messages={messages} />
+                  <SendMessageForm
+                    user={user}
+                    currentChannel={currentChannel}
+                  />
+                </>
+              )}
+            </div>
+          </div>
         </>
       )}
     </div>
