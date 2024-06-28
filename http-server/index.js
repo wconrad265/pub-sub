@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { createServer } = require("http");
 const { connectMongoDB } = require("./config/db");
 const { ioServer } = require("./config/socket");
 const app = require("./app");

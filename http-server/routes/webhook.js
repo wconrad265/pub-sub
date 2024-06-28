@@ -1,16 +1,16 @@
 const express = require("express");
-const Webhook = require("../models/webhook");
+const Webhook = require("../model/webhook");
 const Channel = require("../model/channel");
 
-const webhook = express.Router();
+const webhookRoute = express.Router();
 
-webhook.post("/webhooks", async (req, res) => {
+webhookRoute.post("/webhook", async (req, res) => {
   const { channel, url } = req.body;
 
   if (!channel || !url) {
     return res.status(400).json({ error: "Channel and message are required" });
   }
-  const foundChannel = await Channel.findById(channelId);
+  const foundChannel = await Channel.findOne({ channelName: channel });
 
   if (!foundChannel) {
     return res.status(404).json({ error: "Channel not found" });
@@ -29,4 +29,4 @@ webhook.post("/webhooks", async (req, res) => {
   }
 });
 
-module.exports = messages;
+module.exports = webhookRoute;

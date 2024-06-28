@@ -1,5 +1,6 @@
 const { addChannel } = require("../utils/addChannel.js");
-const { messageQueue } = require("../queue/queue.js");
+const { messageQueue } = require("../queue/messageQueue.js");
+const { webhookChannelQueue } = require("../queue/webhookChannelQueue.js");
 
 const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
@@ -43,6 +44,7 @@ const handleConnection = (socket, ioServer) => {
       ioServer.to(channel).emit("new message", { channel, message });
 
       messageQueue.add("messages", { channel, message });
+      webhookChannelQueue.add("webhookChannel", { channel, message });
     } catch (error) {
       console.error(`Failed to send message to ${channel}:`, error);
     }

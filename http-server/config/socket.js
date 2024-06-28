@@ -19,13 +19,6 @@ const ioServer = () => {
 
   io.adapter(createAdapter(redisClient));
 
-  io.on("connection", (socket) => {
-    socket.on("*", (data) => {
-      console.lot(`Received message from channel: ${data.channel}`);
-    });
-    console.log("connected");
-  });
-
   ioInstance = io;
 
   return io;
