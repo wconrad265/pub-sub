@@ -19,6 +19,7 @@ const App = () => {
     if (user) {
       socket.connect();
       socket.on("new message", handleMessage);
+      socket.emit("user", user);
     }
 
     return () => {

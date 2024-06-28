@@ -1,18 +1,28 @@
 const { findChannel } = require("../utils/findChannel.js");
 const { messageQueue } = require("../queue/messageQueue.js");
 const { webhookChannelQueue } = require("../queue/webhookChannelQueue.js");
+const {
+  removeUserFromChannel,
+  getUsersInChannel,
+} = require("../redis/channelCommands.js");
 
 const handleConnection = (socket, ioServer) => {
   socket.on("subscribe", async (channel, callback) => {
     try {
       await socket.join(channel);
-      const result = await findChannel(channel);
-      const channelId = result._id;
+      const result = await Promise.all([
+        findChannel(channel),
+        getUsersInChannel(channel, socket.id),
+      ]);
 
-      const pastMessages = result
-        ? result.messages.map((message) => message.content)
+      const channelInfo = result[0];
+      const usersInChannel = result[1];
+      const channelId = channelInfo._id;
+      const pastMessages = channelInfo
+        ? channelInfo.messages.map((message) => message.content)
         : [];
 
+      console.log(usersInChannel);
       if (typeof callback === "function") {
         callback({
           success: true,
@@ -34,7 +44,12 @@ const handleConnection = (socket, ioServer) => {
 
   socket.on("unsubscribe", async (channel) => {
     try {
-      await socket.leave(channel);
+      await Promise.all([
+        socket.leave(channel),
+        removeUserFromChannel(channel, socket.id),
+      ]);
+
+      // ioServer.to(channel).emit("user-left", { socketId: socket.id });
     } catch (error) {
       console.error(`Failed to unsubscribe from ${channel}:`, error);
     }
@@ -54,10 +69,6 @@ const handleConnection = (socket, ioServer) => {
     } catch (error) {
       console.error(`Failed to send message to ${channel}:`, error);
     }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
   });
 };
 
